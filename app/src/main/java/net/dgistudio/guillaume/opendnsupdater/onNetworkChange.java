@@ -10,7 +10,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Base64;
-import android.util.Log;
+
+import com.bosphere.filelogger.FL;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -32,20 +33,20 @@ public class onNetworkChange extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
 
-        Log.d("BroadCast", "Change");
-        Log.d("onNetwork", intent.toString());
+        FL.d("BroadCast", "Change");
+        FL.d("onNetwork", intent.toString());
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (networkInfo != null && networkInfo.isConnected() && !prefs.getBoolean("disableUp",false) && !prefs.getBoolean("firstTime",true)) {
-            Log.d("info", "We are connected");
+            FL.d("info", "We are connected");
 
             final String username = prefs.getString("OpenDns_Username", "");
             final String password = prefs.getString("OpenDns_Password", "");
 
-            //Log.d("pref",""+username);
-            //Log.d("pref",""+password);
+            //FL.d("pref",""+username);
+            //FL.d("pref",""+password);
 
             Thread thread = new Thread(new Runnable() {
                 @Override
@@ -59,7 +60,7 @@ public class onNetworkChange extends BroadcastReceiver {
                             request.setURI(website);
                             HttpResponse response = httpclient.execute(request);
                             String result = EntityUtils.toString(response.getEntity());
-                            Log.d("res", result);
+                            FL.d("res", result);
                             if (result.split(" ")[0].equals("good")) {
                                 final NotificationManager mNotification = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
 
@@ -87,7 +88,7 @@ public class onNetworkChange extends BroadcastReceiver {
                             }
 
                         } catch (Exception e) {
-                            Log.e("log_tag", "Error in http connection " + e.toString());
+                            FL.e("log_tag", "Error in http connection " + e.toString());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

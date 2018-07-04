@@ -7,8 +7,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
+import com.bosphere.filelogger.FL;
 
 public class BasicSetting extends PreferenceActivity /*implements setPasswordDialog.NoticeDialogListener, welcomeTextDialog.NoticeDialogListener*/{
     private Intent mServiceIntent;
@@ -22,6 +22,10 @@ public class BasicSetting extends PreferenceActivity /*implements setPasswordDia
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /*if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQ_PERMISSION);
+        }*/
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
        if (prefs.getBoolean("firstTime",true))
@@ -49,7 +53,7 @@ public class BasicSetting extends PreferenceActivity /*implements setPasswordDia
     public void onDialogPositiveClick(DialogFragment dialog) {
         if (dialog.getTag().equals("setPass"))
         {
-            Log.d("d", "Dialog pass validated");
+            FL.d("d", "Dialog pass validated");
         }
         else if (dialog.getTag().equals("welcome"))
         {
@@ -61,20 +65,20 @@ public class BasicSetting extends PreferenceActivity /*implements setPasswordDia
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            Log.i ("isMyServiceRunning?", service.service.getClassName());
+            FL.i ("isMyServiceRunning?", service.service.getClassName());
             if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.i ("isMyServiceRunning?", true+"");
+                FL.i ("isMyServiceRunning?", true+"");
                 return true;
             }
         }
-        Log.i ("isMyServiceRunning?", false+"");
+        FL.i ("isMyServiceRunning?", false+"");
         return false;
     }
 
     @Override
     protected void onDestroy() {
         stopService(mServiceIntent);
-        Log.i("MAINACT", "onDestroy!");
+        FL.i("MAINACT", "onDestroy!");
         super.onDestroy();
     }
 

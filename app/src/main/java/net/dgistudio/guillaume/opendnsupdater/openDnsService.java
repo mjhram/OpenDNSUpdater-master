@@ -31,7 +31,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
+
+import com.bosphere.filelogger.FL;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -57,12 +58,12 @@ public class openDnsService extends Service {
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         opendnsReceiver = new onNetworkChange();
         registerReceiver(opendnsReceiver, intentFilter);
-        Log.i ("NewService:======>", true+"");
+        FL.i ("NewService:======>", true+"");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i ("NewService:======>", "OnStartCmd");
+        FL.i ("NewService:======>", "OnStartCmd");
         HandleIntent(intent);
         return START_STICKY;
     }
@@ -72,7 +73,7 @@ public class openDnsService extends Service {
         unregisterReceiver(opendnsReceiver);
         RemoveNotification();
         super.onDestroy();
-        Log.i("EXIT", "ondestroy!");
+        FL.i("EXIT", "ondestroy!");
         Intent broadcastIntent = new Intent("net.dgistudio.guillaume.opendnsupdater.RestartSensor");
         sendBroadcast(broadcastIntent);
         stoptimertask();
@@ -110,7 +111,7 @@ public class openDnsService extends Service {
         //Session.setStarted(true);
         ShowNotification();
         startTimer();
-        Log.i ("NewService:======>", "Intent_Null");
+        FL.i ("NewService:======>", "Intent_Null");
     }
 
     /**
@@ -201,7 +202,7 @@ public class openDnsService extends Service {
     public void initializeTimerTask() {
         timerTask = new TimerTask() {
             public void run() {
-                Log.i("in timer", "in timer ++++  "+ (counter++));
+                FL.i("in timer", "in timer ++++  "+ (counter++));
             }
         };
     }
